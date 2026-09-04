@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Projetos de arquitetura e interiores da Áurea Arquitetura."
+    >
+
+    <meta
+        name="theme-color"
+        content="#F5F3EF"
+    >
+
+    <title>
+        Projetos — Áurea Arquitetura
+    </title>
+
+
+    <!-- GOOGLE FONTS -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+
+    <!-- ESTILOS ESPECÍFICOS DA GALERIA -->
+
+    <style>
+
+        .project-filters {
+            display: flex;
+            gap: 30px;
+
+            margin-bottom: 65px;
+
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .project-filter {
+            position: relative;
+
+            padding: 0 0 15px;
+
+            border: 0;
+            background: transparent;
+
+            color: var(--gray);
+
+            font-size: 9px;
+            font-weight: 600;
+
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        .project-filter::after {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            bottom: -1px;
+
+            width: 0;
+            height: 1px;
+
+            background: var(--black);
+
+            transition: width .3s ease;
+        }
+
+        .project-filter:hover,
+        .project-filter.active {
+            color: var(--black);
+        }
+
+        .project-filter.active::after {
+            width: 100%;
+        }
+
+
+        .projects-gallery {
+            display: grid;
+
+            grid-template-columns:
+                1.15fr
+                .85fr;
+
+            gap: 100px 55px;
+        }
+
+
+        .gallery-project {
+            display: block;
+
+            transition:
+                opacity .3s ease,
+                transform .3s ease;
+        }
+
+
+        .gallery-project:nth-child(2) {
+            margin-top: 110px;
+        }
+
+        .gallery-project:nth-child(3) {
+            margin-top: -20px;
+        }
+
+        .gallery-project:nth-child(4) {
+            margin-top: 80px;
+        }
+
+        .gallery-project:nth-child(5) {
+            margin-top: 20px;
+        }
+
+        .gallery-project:nth-child(6) {
+            margin-top: 130px;
+        }
+
+
+        .gallery-image {
+            position: relative;
+
+            overflow: hidden;
+
+            background: var(--gray-light);
+        }
+
+
+        .gallery-image img {
+            width: 100%;
+
+            object-fit: cover;
+
+            transition:
+                transform .8s var(--transition);
+        }
+
+
+        .gallery-project:nth-child(odd)
+        .gallery-image img {
+            aspect-ratio: 1.15;
+        }
+
+
+        .gallery-project:nth-child(even)
+        .gallery-image img {
+            aspect-ratio: .82;
+        }
+
+
+        .gallery-project:hover
+        .gallery-image img {
+            transform: scale(1.04);
+        }
+
+
+        .gallery-overlay {
+            position: absolute;
+
+            inset: 0;
+
+            display: flex;
+            align-items: flex-end;
+
+            padding: 25px;
+
+            background:
+                linear-gradient(
+                    0deg,
+                    rgba(0,0,0,.48),
+                    transparent 45%
+                );
+
+            opacity: 0;
+
+            transition:
+                opacity .4s ease;
+        }
+
+
+        .gallery-project:hover
+        .gallery-overlay {
+            opacity: 1;
+        }
+
+
+        .gallery-overlay span {
+            color: white;
+
+            font-size: 9px;
+            font-weight: 600;
+
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+
+        .gallery-info {
+            padding-top: 14px;
+        }
+
+
+        .gallery-number {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: var(--gray);
+
+            font-size: 8px;
+
+            letter-spacing: .12em;
+        }
+
+
+        .gallery-info h2 {
+            margin-bottom: 5px;
+
+            font-family: var(--serif);
+
+            font-size: 32px;
+            font-weight: 500;
+
+            line-height: 1;
+        }
+
+
+        .gallery-meta {
+            color: var(--gray);
+
+            font-size: 8px;
+
+            letter-spacing: .12em;
+
+            text-transform: uppercase;
+        }
+
+
+        .project-modal {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 500;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+
+            background: rgba(23,23,23,.72);
+
+            opacity: 0;
+            visibility: hidden;
+
+            transition:
+                opacity .35s ease,
+                visibility .35s ease;
+        }
+
+
+        .project-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        .modal-content {
+            position: relative;
+
+            width: min(
+                1100px,
+                100%
+            );
+
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            background: var(--off-white);
+        }
+
+
+        .modal-close {
+            position: absolute;
+
+            top: 18px;
+            right: 18px;
+
+            z-index: 3;
+
+            width: 42px;
+            height: 42px;
+
+            border: 1px solid rgba(255,255,255,.5);
+
+            background: rgba(0,0,0,.25);
+
+            color: white;
+
+            font-size: 22px;
+            line-height: 1;
+
+            transition: .3s ease;
+        }
+
+
+        .modal-close:hover {
+            background: var(--black);
+        }
+
+
+        .modal-image {
+            width: 100%;
+
+            max-height: 580px;
+
+            object-fit: cover;
+        }
+
+
+        .modal-body {
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1.5fr;
+
+            gap: 60px;
+
+            padding: 55px;
+        }
+
+
+        .modal-title {
+            margin: 15px 0;
+
+            font-family: var(--serif);
+
+            font-size: 58px;
+            font-weight: 500;
+
+            line-height: .9;
+        }
+
+
+        .modal-description {
+            color: var(--gray);
+
+            font-size: 13px;
+        }
+
+
+        .modal-details {
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap: 25px;
+
+            margin-bottom: 35px;
+        }
+
+
+        .modal-detail {
+            padding-top: 12px;
+
+            border-top: 1px solid var(--gray-light);
+        }
+
+
+        .modal-detail span {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: var(--gray);
+
+            font-size: 8px;
+
+            letter-spacing: .14em;
+
+            text-transform: uppercase;
+        }
+
+
+        .modal-detail strong {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+
+        .modal-gallery {
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            gap: 15px;
+
+            margin-top: 25px;
+        }
+
+
+        .modal-gallery img {
+            aspect-ratio: 1.2;
+
+            object-fit: cover;
+        }
+
+
+        .empty-projects {
+            display: none;
+
+            padding: 80px 0;
+
+            color: var(--gray);
+
+            text-align: center;
+        }
+
+
+        @media (max-width: 900px) {
+
+            .projects-gallery {
+                grid-template-columns: 1fr;
+
+                gap: 70px;
+            }
+
+
+            .gallery-project:nth-child(n) {
+                margin-top: 0;
+            }
+
+
+            .gallery-project:nth-child(even) {
+                width: 85%;
+
+                margin-left: auto;
+            }
+
+
+            .modal-body {
+                grid-template-columns: 1fr;
+
+                gap: 30px;
+
+                padding: 35px;
+            }
+
+        }
+
+
+        @media (max-width: 520px) {
+
+            .project-filters {
+                gap: 18px;
+
+                overflow-x: auto;
+
+                padding-bottom: 0;
+            }
+
+
+            .project-filter {
+                flex-shrink: 0;
+            }
+
+
+            .gallery-project:nth-child(even) {
+                width: 92%;
+            }
+
+
+            .modal-content {
+                max-height: 94vh;
+            }
+
+
+            .modal-body {
+                padding: 28px 20px;
+            }
+
+
+            .modal-title {
+                font-size: 48px;
+            }
+
+
+            .modal-gallery {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         ACESSIBILIDADE
+    ========================== -->
+
+    <a
+        href="#conteudo"
+        class="skip-link"
+    >
+        Pular para o conteúdo
+    </a>
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="site-header solid">
+
+        <div class="container navbar">
+
+
+            <!-- LOGO -->
+
+            <a
+                href="index.html"
+                class="logo"
+                aria-label="Áurea Arquitetura — página inicial"
+            >
+
+                <strong>
+                    Áurea
+                </strong>
+
+                <span>
+                    Arquitetura
+                </span>
+
+            </a>
+
+
+            <!-- DESKTOP -->
+
+            <nav
+                class="desktop-nav"
+                aria-label="Navegação principal"
+            >
+
+                <a href="index.html">
+                    Início
+                </a>
+
+                <a href="sobre.html">
+                    Sobre
+                </a>
+
+                <a href="servicos.html">
+                    Serviços
+                </a>
+
+                <a
+                    href="projetos.html"
+                    class="active"
+                >
+                    Projetos
+                </a>
+
+                <a href="contato.html">
+                    Contato
+                </a>
+
+            </nav>
+
+
+            <!-- CTA -->
+
+            <a
+                href="contato.html"
+                class="header-cta"
+            >
+                Falar sobre um projeto
+            </a>
+
+
+            <!-- MOBILE -->
+
+            <button
+                class="menu-toggle"
+                type="button"
+                aria-label="Abrir menu"
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+            >
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
+
+        </div>
+
+
+        <!-- MOBILE MENU -->
+
+        <nav
+            class="mobile-menu"
+            id="mobile-menu"
+            aria-label="Navegação mobile"
+        >
+
+            <a href="index.html">
+                <span>Início</span>
+                <small>01</small>
+            </a>
+
+            <a href="sobre.html">
+                <span>Sobre</span>
+                <small>02</small>
+            </a>
+
+            <a href="servicos.html">
+                <span>Serviços</span>
+                <small>03</small>
+            </a>
+
+            <a href="projetos.html">
+                <span>Projetos</span>
+                <small>04</small>
+            </a>
+
+            <a href="contato.html">
+                <span>Contato</span>
+                <small>05</small>
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =========================
+         CONTEÚDO
+    ========================== -->
+
+    <main id="conteudo">
+
+
+        <!-- =========================
+             HERO
+        ========================== -->
+
+        <section class="page-hero">
+
+            <div class="container reveal">
+
+                <span class="eyebrow">
+                    01 — Portfólio
+                </span>
+
+
+                <h1>
+
+                    Projetos que
+                    <em>
+                        contam histórias.
+                    </em>
+
+                </h1>
+
+
+                <p class="intro-text">
+
+                    Uma seleção fictícia de projetos
+                    desenvolvidos para representar
+                    a linguagem e o universo visual
+                    da Áurea Arquitetura.
+
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             GALERIA
+        ========================== -->
+
+        <section class="section">
+
+            <div class="container">
+
+
+                <!-- FILTROS -->
+
+                <div
+                    class="project-filters reveal"
+                    role="group"
+                    aria-label="Filtrar projetos"
+                >
+
+                    <button
+                        class="project-filter active"
+                        type="button"
+                        data-filter="todos"
+                    >
+                        Todos
+                    </button>
+
+                    <button
+                        class="project-filter"
+                        type="button"
+                        data-filter="residencial"
+                    >
+                        Residencial
+                    </button>
+
+                    <button
+                        class="project-filter"
+                        type="button"
+                        data-filter="interiores"
+                    >
+                        Interiores
+                    </button>
+
+                    <button
+                        class="project-filter"
+                        type="button"
+                        data-filter="comercial"
+                    >
+                        Comercial
+                    </button>
+
+                </div>
+
+
+                <!-- PROJETOS -->
+
+                <div class="projects-gallery">
+
+
+                    <!-- =========================
+                         CASA HORIZONTE
+                    ========================== -->
+
+                    <a
+                        href="#"
+                        class="gallery-project reveal"
+                        data-category="residencial"
+                        data-project="casa-horizonte"
+                    >
+
+                        <div class="gallery-image">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=85"
+                                alt="Casa Horizonte"
+                                loading="lazy"
+                            >
+
+                            <div class="gallery-overlay">
+
+                                <span>
+                                    Ver projeto →
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="gallery-info">
+
+                            <span class="gallery-number">
+                                01 / 06
+                            </span>
+
+                            <h2>
+                                Casa Horizonte
+                            </h2>
+
+                            <span class="gallery-meta">
+                                Residencial · Belo Horizonte · 2026
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- =========================
+                         APARTAMENTO 42
+                    ========================== -->
+
+                    <a
+                        href="#"
+                        class="gallery-project reveal"
+                        data-category="interiores"
+                        data-project="apartamento-42"
+                    >
+
+                        <div class="gallery-image">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=85"
+                                alt="Apartamento 42"
+                                loading="lazy"
+                            >
+
+                            <div class="gallery-overlay">
+
+                                <span>
+                                    Ver projeto →
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="gallery-info">
+
+                            <span class="gallery-number">
+                                02 / 06
+                            </span>
+
+                            <h2>
+                                Apartamento 42
+                            </h2>
+
+                            <span class="gallery-meta">
+                                Interiores · Belo Horizonte · 2026
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- =========================
+                         CASA LUME
+                    ========================== -->
+
+                    <a
+                        href="#"
+                        class="gallery-project reveal"
+                        data-category="residencial"
+                        data-project="casa-lume"
+                    >
+
+                        <div class="gallery-image">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=85"
+                                alt="Casa Lume"
+                                loading="lazy"
+                            >
+
+                            <div class="gallery-overlay">
+
+                                <span>
+                                    Ver projeto →
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="gallery-info">
+
+                            <span class="gallery-number">
+                                03 / 06
+                            </span>
+
+                            <h2>
+                                Casa Lume
+                            </h2>
+
+                            <span class="gallery-meta">
+                                Residencial · Nova Lima · 2025
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- =========================
+                         ESTÚDIO NÓRDICO
+                    ========================== -->
+
+                    <a
+                        href="#"
+                        class="gallery-project reveal"
+                        data-category="interiores"
+                        data-project="estudio-nordico"
+                    >
+
+                        <div class="gallery-image">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1600&q=85"
+                                alt="Estúdio Nórdico"
+                                loading="lazy"
+                            >
+
+                            <div class="gallery-overlay">
+
+                                <span>
+                                    Ver projeto →
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="gallery-info">
+
+                            <span class="gallery-number">
+                                04 / 06
+                            </span>
+
+                            <h2>
+                                Estúdio Nórdico
+                            </h2>
+
+                            <span class="gallery-meta">
+                                Interiores · São Paulo · 2025
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- =========================
+                         CASA ENTRELINHAS
+                    ========================== -->
+
+                    <a
+                        href="#"
+                        class="gallery-project reveal"
+                        data-category="residencial"
+                        data-project="casa-entrelinhas"
+                    >
+
+                        <div class="gallery-image">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1700&q=85"
+                                alt="Casa Entrelinhas"
+                                loading="lazy"
+                            >
+
+                            <div class="gallery-overlay">
+
+                                <span>
+                                    Ver projeto →
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="gallery-info">
+
+                            <span class="gallery-number">
+                                05 / 06
+                            </span>
+
+                            <h2>
+                                Casa Entrelinhas
+                            </h2>
+
+                            <span class="gallery-meta">
+                                Residencial · Belo Horizonte · 2025
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                    <!-- =========================
+                         GALERIA NORTE
+                    ========================== -->
+
+                    <a
+                        href="#"
+                        class="gallery-project reveal"
+                        data-category="comercial"
+                        data-project="galeria-norte"
+                    >
+
+                        <div class="gallery-image">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=85"
+                                alt="Galeria Norte"
+                                loading="lazy"
+                            >
+
+                            <div class="gallery-overlay">
+
+                                <span>
+                                    Ver projeto →
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="gallery-info">
+
+                            <span class="gallery-number">
+                                06 / 06
+                            </span>
+
+                            <h2>
+                                Galeria Norte
+                            </h2>
+
+                            <span class="gallery-meta">
+                                Comercial · Belo Horizonte · 2026
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             FRASE FINAL
+        ========================== -->
+
+        <section
+            class="section statement"
+        >
+
+            <div class="container reveal">
+
+                <span class="eyebrow">
+                    02 — Arquitetura
+                </span>
+
+
+                <p class="statement-text">
+
+                    Cada projeto começa com
+                    uma pergunta:
+                    <em>
+                        como você quer viver?
+                    </em>
+
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CTA
+        ========================== -->
+
+        <section class="section final-cta">
+
+            <div class="container reveal">
+
+                <span class="eyebrow">
+                    03 — Próximo projeto
+                </span>
+
+
+                <h2>
+
+                    Talvez o próximo
+                    seja
+                    <em>
+                        o seu.
+                    </em>
+
+                </h2>
+
+
+                <p>
+                    Vamos conversar sobre sua ideia?
+                </p>
+
+
+                <a
+                    href="contato.html"
+                    class="button button-dark"
+                >
+
+                    Falar sobre um projeto
+
+                    <span aria-hidden="true">
+                        →
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         MODAL DE PROJETO
+    ========================== -->
+
+    <div
+        class="project-modal"
+        id="project-modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+    >
+
+        <div class="modal-content">
+
+
+            <button
+                class="modal-close"
+                id="modal-close"
+                type="button"
+                aria-label="Fechar projeto"
+            >
+                ×
+            </button>
+
+
+            <img
+                id="modal-image"
+                class="modal-image"
+                src=""
+                alt=""
+            >
+
+
+            <div class="modal-body">
+
+
+                <!-- INFORMAÇÕES PRINCIPAIS -->
+
+                <div>
+
+                    <span
+                        id="modal-category"
+                        class="eyebrow"
+                    >
+                    </span>
+
+
+                    <h2
+                        id="modal-title"
+                        class="modal-title"
+                    >
+                    </h2>
+
+
+                    <p
+                        id="modal-description"
+                        class="modal-description"
+                    >
+                    </p>
+
+                </div>
+
+
+                <!-- DETALHES -->
+
+                <div>
+
+                    <div class="modal-details">
+
+
+                        <div class="modal-detail">
+
+                            <span>
+                                Local
+                            </span>
+
+                            <strong id="modal-location">
+                            </strong>
+
+                        </div>
+
+
+                        <div class="modal-detail">
+
+                            <span>
+                                Ano
+                            </span>
+
+                            <strong id="modal-year">
+                            </strong>
+
+                        </div>
+
+
+                        <div class="modal-detail">
+
+                            <span>
+                                Área
+                            </span>
+
+                            <strong id="modal-area">
+                            </strong>
+
+                        </div>
+
+
+                        <div class="modal-detail">
+
+                            <span>
+                                Status
+                            </span>
+
+                            <strong id="modal-status">
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <p
+                        id="modal-concept"
+                        class="modal-description"
+                    >
+                    </p>
+
+
+                    <div class="modal-gallery">
+
+                        <img
+                            id="modal-gallery-one"
+                            src=""
+                            alt=""
+                        >
+
+                        <img
+                            id="modal-gallery-two"
+                            src=""
+                            alt=""
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="footer">
+
+        <div class="container">
+
+            <div class="footer-grid">
+
+
+                <!-- MARCA -->
+
+                <div class="footer-column">
+
+                    <a
+                        href="index.html"
+                        class="logo"
+                        aria-label="Áurea Arquitetura"
+                    >
+
+                        <strong>
+                            Áurea
+                        </strong>
+
+                        <span>
+                            Arquitetura
+                        </span>
+
+                    </a>
+
+
+                    <p class="footer-description">
+
+                        Espaços que traduzem
+                        a sua essência.
+
+                    </p>
+
+                </div>
+
+
+                <!-- NAVEGAÇÃO -->
+
+                <div class="footer-column">
+
+                    <label>
+                        Navegação
+                    </label>
+
+                    <a href="index.html">
+                        Início
+                    </a>
+
+                    <a href="sobre.html">
+                        Sobre
+                    </a>
+
+                    <a href="servicos.html">
+                        Serviços
+                    </a>
+
+                    <a href="projetos.html">
+                        Projetos
+                    </a>
+
+                    <a href="contato.html">
+                        Contato
+                    </a>
+
+                </div>
+
+
+                <!-- CONTATO -->
+
+                <div class="footer-column">
+
+                    <label>
+                        Contato
+                    </label>
+
+                    <a href="tel:+5531988887777">
+                        (31) 98888-7777
+                    </a>
+
+                    <a href="mailto:contato@aureaarquitetura.com">
+                        contato@aureaarquitetura.com
+                    </a>
+
+                    <span>
+                        Belo Horizonte, MG
+                    </span>
+
+                    <span>
+                        Segunda a sexta · 09h às 18h
+                    </span>
+
+                </div>
+
+
+                <!-- SOCIAL -->
+
+                <div class="footer-column">
+
+                    <label>
+                        Social
+                    </label>
+
+                    <a
+                        href="https://instagram.com/aureaarquitetura"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Instagram
+                    </a>
+
+                    <span>
+                        @aureaarquitetura
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 Áurea Arquitetura.
+                    Projeto fictício para demonstração.
+                </span>
+
+                <span>
+                    Projeto demonstrativo desenvolvido
+                    pela MAVIA FORMA.
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+        /* =========================================
+           DADOS DOS PROJETOS
+        ========================================= */
+
+        const projects = {
+
+            "casa-horizonte": {
+
+                title: "Casa Horizonte",
+
+                category: "Arquitetura Residencial",
+
+                location: "Belo Horizonte, MG",
+
+                year: "2026",
+
+                area: "420 m²",
+
+                status: "Projeto conceitual",
+
+                description:
+                    "Uma residência contemporânea desenvolvida a partir da integração entre luz natural, materiais naturais e espaços de convivência.",
+
+                concept:
+                    "O conceito parte da relação entre interior e exterior. Grandes aberturas aproximam os ambientes do jardim, enquanto volumes mais fechados criam momentos de privacidade e acolhimento.",
+
+                image:
+                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=90",
+
+                galleryOne:
+                    "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85",
+
+                galleryTwo:
+                    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85"
+
+            },
+
+
+            "apartamento-42": {
+
+                title: "Apartamento 42",
+
+                category: "Interiores",
+
+                location: "Belo Horizonte, MG",
+
+                year: "2026",
+
+                area: "168 m²",
+
+                status: "Projeto conceitual",
+
+                description:
+                    "Um apartamento de linguagem essencial, onde materiais naturais e iluminação indireta criam uma atmosfera silenciosa e acolhedora.",
+
+                concept:
+                    "A proposta reorganiza a circulação e cria uma sequência visual contínua entre os ambientes sociais. Tons neutros funcionam como base para peças de personalidade.",
+
+                image:
+                    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1800&q=90",
+
+                galleryOne:
+                    "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=85",
+
+                galleryTwo:
+                    "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85"
+
+            },
+
+
+            "casa-lume": {
+
+                title: "Casa Lume",
+
+                category: "Arquitetura Residencial",
+
+                location: "Nova Lima, MG",
+
+                year: "2025",
+
+                area: "350 m²",
+
+                status: "Projeto conceitual",
+
+                description:
+                    "Uma residência marcada pela presença da luz e por uma materialidade natural, criando ambientes conectados ao entorno.",
+
+                concept:
+                    "A casa foi imaginada como uma sequência de espaços de diferentes escalas, alternando áreas abertas de convivência com ambientes mais íntimos.",
+
+                image:
+                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1800&q=90",
+
+                galleryOne:
+                    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
+
+                galleryTwo:
+                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85"
+
+            },
+
+
+            "estudio-nordico": {
+
+                title: "Estúdio Nórdico",
+
+                category: "Interiores",
+
+                location: "São Paulo, SP",
+
+                year: "2025",
+
+                area: "92 m²",
+
+                status: "Projeto conceitual",
+
+                description:
+                    "Um espaço de trabalho e criação pensado para equilibrar concentração, colaboração e conforto.",
+
+                concept:
+                    "A paleta neutra e a madeira criam uma base acolhedora, enquanto elementos metálicos e iluminação pontual acrescentam precisão ao ambiente.",
+
+                image:
+                    "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1800&q=90",
+
+                galleryOne:
+                    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=85",
+
+                galleryTwo:
+                    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=85"
+
+            },
+
+
+            "casa-entrelinhas": {
+
+                title: "Casa Entrelinhas",
+
+                category: "Arquitetura Residencial",
+
+                location: "Belo Horizonte, MG",
+
+                year: "2025",
+
+                area: "290 m²",
+
+                status: "Projeto conceitual",
+
+                description:
+                    "Uma residência construída a partir de linhas simples, pátios internos e uma relação cuidadosa com a iluminação.",
+
+                concept:
+                    "A implantação cria pequenos intervalos entre os volumes da casa, permitindo que a luz percorra os ambientes durante diferentes momentos do dia.",
+
+                image:
+                    "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=90",
+
+                galleryOne:
+                    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85",
+
+                galleryTwo:
+                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85"
+
+            },
+
+
+            "galeria-norte": {
+
+                title: "Galeria Norte",
+
+                category: "Arquitetura Comercial",
+
+                location: "Belo Horizonte, MG",
+
+                year: "2026",
+
+                area: "510 m²",
+
+                status: "Projeto conceitual",
+
+                description:
+                    "Um espaço comercial desenvolvido para receber exposições, encontros e experiências relacionadas ao design.",
+
+                concept:
+                    "A arquitetura trabalha com grandes planos neutros e percursos fluidos, permitindo diferentes configurações de uso ao longo do tempo.",
+
+                image:
+                    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=90",
+
+                galleryOne:
+                    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=85",
+
+                galleryTwo:
+                    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=85"
+
+            }
+
+        };
+
+
+        /* =========================================
+           ELEMENTOS DO MODAL
+        ========================================= */
+
+        const modal =
+            document.getElementById(
+                "project-modal"
+            );
+
+        const modalClose =
+            document.getElementById(
+                "modal-close"
+            );
+
+        const modalImage =
+            document.getElementById(
+                "modal-image"
+            );
+
+        const modalTitle =
+            document.getElementById(
+                "modal-title"
+            );
+
+        const modalCategory =
+            document.getElementById(
+                "modal-category"
+            );
+
+        const modalLocation =
+            document.getElementById(
+                "modal-location"
+            );
+
+        const modalYear =
+            document.getElementById(
+                "modal-year"
+            );
+
+        const modalArea =
+            document.getElementById(
+                "modal-area"
+            );
+
+        const modalStatus =
+            document.getElementById(
+                "modal-status"
+            );
+
+        const modalDescription =
+            document.getElementById(
+                "modal-description"
+            );
+
+        const modalConcept =
+            document.getElementById(
+                "modal-concept"
+            );
+
+        const galleryOne =
+            document.getElementById(
+                "modal-gallery-one"
+            );
+
+        const galleryTwo =
+            document.getElementById(
+                "modal-gallery-two"
+            );
+
+
+        /* =========================================
+           ABRIR MODAL
+        ========================================= */
+
+        function openProject(projectId) {
+
+            const project =
+                projects[projectId];
+
+            if (!project) return;
+
+
+            modalTitle.textContent =
+                project.title;
+
+            modalCategory.textContent =
+                project.category;
+
+            modalLocation.textContent =
+                project.location;
+
+            modalYear.textContent =
+                project.year;
+
+            modalArea.textContent =
+                project.area;
+
+            modalStatus.textContent =
+                project.status;
+
+            modalDescription.textContent =
+                project.description;
+
+            modalConcept.textContent =
+                project.concept;
+
+
+            modalImage.src =
+                project.image;
+
+            modalImage.alt =
+                project.title;
+
+
+            galleryOne.src =
+                project.galleryOne;
+
+            galleryOne.alt =
+                `${project.title} — detalhe 1`;
+
+
+            galleryTwo.src =
+                project.galleryTwo;
+
+            galleryTwo.alt =
+                `${project.title} — detalhe 2`;
+
+
+            modal.classList.add(
+                "open"
+            );
+
+            modal.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+            document.body.classList.add(
+                "menu-open"
+            );
+
+
+            modalClose.focus();
+
+        }
+
+
+        /* =========================================
+           FECHAR MODAL
+        ========================================= */
+
+        function closeProject() {
+
+            modal.classList.remove(
+                "open"
+            );
+
+            modal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+            document.body.classList.remove(
+                "menu-open"
+            );
+
+        }
+
+
+        /* =========================================
+           CLIQUE NOS PROJETOS
+        ========================================= */
+
+        document
+            .querySelectorAll(
+                ".gallery-project"
+            )
+            .forEach(project => {
+
+                project.addEventListener(
+                    "click",
+                    event => {
+
+                        event.preventDefault();
+
+                        const projectId =
+                            project.dataset.project;
+
+                        openProject(
+                            projectId
+                        );
+
+                    }
+                );
+
+            });
+
+
+        /* =========================================
+           BOTÃO FECHAR
+        ========================================= */
+
+        modalClose.addEventListener(
+            "click",
+            closeProject
+        );
+
+
+        /* =========================================
+           CLIQUE FORA
+        ========================================= */
+
+        modal.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === modal
+                ) {
+
+                    closeProject();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           ESC
+        ========================================= */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape" &&
+                    modal.classList.contains("open")
+                ) {
+
+                    closeProject();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           FILTROS
+        ========================================= */
+
+        const filterButtons =
+            document.querySelectorAll(
+                ".project-filter"
+            );
+
+        const galleryProjects =
+            document.querySelectorAll(
+                ".gallery-project"
+            );
+
+
+        filterButtons.forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const filter =
+                        button.dataset.filter;
+
+
+                    filterButtons.forEach(
+                        item => {
+
+                            item.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+
+                    button.classList.add(
+                        "active"
+                    );
+
+
+                    galleryProjects.forEach(
+                        project => {
+
+                            const category =
+                                project.dataset.category;
+
+
+                            if (
+                                filter === "todos" ||
+                                category === filter
+                            ) {
+
+                                project.style.display =
+                                    "block";
+
+                            } else {
+
+                                project.style.display =
+                                    "none";
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+        });
+
+
+        /* =========================================
+           ABRIR PROJETO PELA URL
+
+           Exemplo:
+           projetos.html?projeto=casa-horizonte
+        ========================================= */
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const selectedProject =
+            params.get(
+                "projeto"
+            );
+
+
+        if (
+            selectedProject &&
+            projects[selectedProject]
+        ) {
+
+            openProject(
+                selectedProject
+            );
+
+        }
+
+    </script>
+
+
+    <!-- SCRIPT PRINCIPAL -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
